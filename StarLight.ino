@@ -8,6 +8,8 @@
 #define JOUEURA 1
 #define JOUEURB 2
 
+#define DEFAUT_FACTEUR_TOLERANCE  3
+
 // librairie nécessaire au pilotage de la matrice de led HT1632c
 // https://github.com/jlebunetel/HT1632_arduino/tree/ArduinoMega
 #include <HT1632_arduino.h>
@@ -159,15 +161,36 @@ void loop() {
     // on temporise un peu pour ralentir la balle
     //delay(20);
 
-    // un jeur appuie au bon moment ?
-    if (balle_position < taille_raquette and balle_direction == 1 and digitalRead(boutonA) == 0) {
-      // le joueur A renvoie la balle
-      balle_direction = 1 - balle_direction;
+    // Le joueur A appuye
+    if (digitalRead(boutonA) == 0) {
+      if (balle_position < taille_raquette and balle_direction == 1) {
+        // le joueur A renvoie la balle
+        balle_direction = 1 - balle_direction;
+      }
+      else if (balle_position > taille_raquette * DEFAUT_FACTEUR_TOLERANCE and balle_direction == 1) {
+        // le joueur B a gagné !
+        scoreB++;
+        main_joueur = JOUEURA;
+        partie_en_cours = false;
+        theaterChase(strip.Color(127, 0, 0), 50); // Green
+      }
     }
-    if ((balle_position > strip.numPixels() - taille_raquette - 1) and balle_direction == 0 and digitalRead(boutonB) == 0) {
-      // le joueur B renvoie la balle
-      balle_direction = 1 - balle_direction;
+
+    // Le joueur B appuye
+    if (digitalRead(boutonB) == 0) {
+      if ((balle_position > strip.numPixels() - taille_raquette - 1) and balle_direction == 0) {
+        // le joueur B renvoie la balle
+        balle_direction = 1 - balle_direction;
+      }
+      else if (balle_position < strip.numPixels() - taille_raquette * DEFAUT_FACTEUR_TOLERANCE - 1 and balle_direction == 0) {
+        // le joueur A a gagné !
+        scoreA++;
+        main_joueur = JOUEURB;
+        partie_en_cours = false;
+        theaterChase(strip.Color(0, 127, 0), 50); // Red
+      }
     }
+
 
     // on efface la balle
     if (balle_position < taille_raquette) {
