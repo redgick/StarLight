@@ -191,7 +191,7 @@ void loop() {
       if (balle_position >= strip.numPixels()) {
         // le joueur A a gagné !
         scoreA++;
-        main_joueur = JOUEURA;
+        main_joueur = JOUEURB;
         partie_en_cours = false;
         theaterChase(strip.Color(0, 127, 0), 50); // Red
       }
@@ -202,7 +202,7 @@ void loop() {
       if (balle_position == 0) {
         // le joueur B a gagné !
         scoreB++;
-        main_joueur = JOUEURB;
+        main_joueur = JOUEURA;
         partie_en_cours = false;
         theaterChase(strip.Color(127, 0, 0), 50); // Green
       }
