@@ -9,7 +9,7 @@
 #define JOUEURB 2
 
 #define DEFAUT_FACTEUR_TOLERANCE  3
-#define NUM_LEDS                  238
+#define NUM_LEDS                  236
 
 // librairie nécessaire au pilotage de la matrice de led HT1632c
 // https://github.com/jlebunetel/HT1632_arduino/tree/ArduinoMega
