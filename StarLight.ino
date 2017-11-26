@@ -9,6 +9,7 @@
 #define JOUEURB 2
 
 #define DEFAUT_FACTEUR_TOLERANCE  3
+#define NUM_LEDS                  236
 
 // librairie nécessaire au pilotage de la matrice de led HT1632c
 // https://github.com/jlebunetel/HT1632_arduino/tree/ArduinoMega
@@ -39,7 +40,7 @@ const int boutonB = 11;
 // Parameter 3 = pixel type flags, add together as needed:
 //   NEO_KHZ800  800 KHz bitstream (most NeoPixel products w/WS2812 LEDs)
 //   NEO_GRB     Pixels are wired for GRB bitstream (most NeoPixel products)
-Adafruit_NeoPixel strip = Adafruit_NeoPixel(238, PIN, NEO_GRB + NEO_KHZ800);
+Adafruit_NeoPixel strip = Adafruit_NeoPixel(NUM_LEDS, PIN, NEO_GRB + NEO_KHZ800);
 
 // variables globales
 int taille_raquette = 7;
@@ -79,7 +80,7 @@ void loop() {
     afficheur.display(ecran);
 
     // une petite animation pour patienter ...
-    for (uint8_t i = 0; i < strip.numPixels(); i++) {
+    for (uint8_t i = 0; i < NUM_LEDS ; i++) {
       strip.setPixelColor(i, strip.Color(0, 0, 0));
     }
     strip.show();
@@ -115,7 +116,7 @@ void loop() {
     // raquette verte
     strip.setPixelColor(i, strip.Color(0, 64, 0));
     // raquette rouge
-    strip.setPixelColor(strip.numPixels() - i - 1, strip.Color(64, 0, 0));
+    strip.setPixelColor(NUM_LEDS - i - 1, strip.Color(64, 0, 0));
   }
   strip.show();
 
@@ -140,9 +141,9 @@ void loop() {
   }
   else {
     // le joueur B a la main
-    balle_position = strip.numPixels();
+    balle_position = NUM_LEDS - 1;
     balle_direction = 1;
-    strip.setPixelColor(balle_position - 1, strip.Color(0, 0, 128));
+    strip.setPixelColor(balle_position, strip.Color(0, 0, 128));
     strip.show();
     while (digitalRead(boutonB) == 1) {
       // on attend un appuis sur le bouton B
@@ -178,11 +179,11 @@ void loop() {
 
     // Le joueur B appuye
     if (digitalRead(boutonB) == 0) {
-      if ((balle_position > strip.numPixels() - taille_raquette - 1) and balle_direction == 0) {
+      if ((balle_position > NUM_LEDS - taille_raquette - 1) and balle_direction == 0) {
         // le joueur B renvoie la balle
         balle_direction = 1 - balle_direction;
       }
-      else if (balle_position < strip.numPixels() - taille_raquette * DEFAUT_FACTEUR_TOLERANCE - 1 and balle_direction == 0) {
+      else if (balle_position < NUM_LEDS - taille_raquette * DEFAUT_FACTEUR_TOLERANCE - 1 and balle_direction == 0) {
         // le joueur A a gagné !
         scoreA++;
         main_joueur = JOUEURB;
@@ -197,7 +198,7 @@ void loop() {
       // raquette verte
       strip.setPixelColor(balle_position, strip.Color(0, 64, 0));
     }
-    else if (balle_position > strip.numPixels() - taille_raquette - 1) {
+    else if (balle_position > NUM_LEDS - taille_raquette - 1) {
       // raquette rouge
       strip.setPixelColor(balle_position, strip.Color(64, 0, 0));
     }
@@ -211,26 +212,27 @@ void loop() {
     if (balle_direction == 0) {
       balle_position++;
       balle_position++;
-      if (balle_position >= strip.numPixels()) {
+      if (balle_position >= NUM_LEDS - 1) {
         // le joueur A a gagné !
         scoreA++;
         main_joueur = JOUEURB;
         partie_en_cours = false;
+        balle_position = NUM_LEDS - 1 ;
         theaterChase(strip.Color(0, 127, 0), 50); // Red
       }
     }
     else {
       balle_position--;
       balle_position--;
-      if (balle_position == 0) {
+      if (balle_position <= 0) {
         // le joueur B a gagné !
         scoreB++;
         main_joueur = JOUEURA;
         partie_en_cours = false;
+        balle_position = 0;
         theaterChase(strip.Color(127, 0, 0), 50); // Green
       }
     }
-
   }
 }
 
@@ -239,12 +241,12 @@ void loop() {
 void theaterChase(uint32_t c, uint8_t wait) {
   for (int j = 0; j < 10; j++) { //do 10 cycles of chasing
     for (int q = 0; q < 3; q++) {
-      for (uint16_t i = 0; i < strip.numPixels(); i = i + 3) {
+      for (uint16_t i = 0; i < NUM_LEDS; i = i + 3) {
         strip.setPixelColor(i + q, c);  //turn every third pixel on
       }
       strip.show();
       delay(wait);
-      for (uint16_t i = 0; i < strip.numPixels(); i = i + 3) {
+      for (uint16_t i = 0; i < NUM_LEDS; i = i + 3) {
         strip.setPixelColor(i + q, 0);      //turn every third pixel off
       }
     }
