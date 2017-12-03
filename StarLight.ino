@@ -12,7 +12,7 @@
 #define NUM_LEDS                  236
 
 // librairie nécessaire au pilotage de la matrice de led HT1632c
-// https://github.com/jlebunetel/HT1632_arduino/tree/ArduinoMega
+// https://github.com/jlebunetel/HT1632_arduino
 #include <HT1632_arduino.h>
 
 // création de l'objet afficheur
