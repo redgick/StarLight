@@ -34,4 +34,5 @@ On raccorde la matrice de led à Arduino selon le brochage suivant :
 
 ## Documentation du projet
 
-http://www.wiki-rennes.fr/M%C3%A9troMix_2017/StarLight
+* [Présentation de la version StarLight by Keolis](https://julien.lebunetel.com/projects/StarLight_by_Keolis/)
+* [Documentation Métromix 2017 sur WikiRennes](http://www.wiki-rennes.fr/M%C3%A9troMix_2017/StarLight)
